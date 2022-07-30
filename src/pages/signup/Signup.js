@@ -16,6 +16,11 @@ const Signup = () => {
     e.preventDefault()
     // console.log(email, password, displayName, thumbnail)
     signup(email, password, displayName, thumbnail)
+
+    // reset form
+    setEmail('')
+    setPassword('')
+    setDisplayName('')
   }
 
   const handleFileChange = (e) => {

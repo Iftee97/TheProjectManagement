@@ -49,7 +49,6 @@ const Signup = () => {
   return (
     <form className='auth-form' onSubmit={handleSubmit}>
       <h2>Signup</h2>
-
       <label>
         <span>Email:</span>
         <input
@@ -86,7 +85,6 @@ const Signup = () => {
         />
         {thumbnailError && <div className='error'>{thumbnailError}</div>}
       </label>
-
       {!isPending && <button className='btn'>Signup</button>}
       {isPending && <button className='btn' disabled>Loading...</button>}
       {error && <div className='error'>{error}</div>}

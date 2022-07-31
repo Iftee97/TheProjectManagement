@@ -8,7 +8,6 @@ const ProjectComments = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-
     const commentToAdd = {
       displayName: user.displayName,
       photoURL: user.photoURL,

@@ -1,13 +1,10 @@
-import React, { useState } from 'react'
+import React from 'react'
 
 const filterList = ['all', 'mine', 'development', 'design', 'marketing', 'sales']
 
-const ProjectFilter = () => {
-  const [currentCategory, setCurrentCategory] = useState('all')
-
+const ProjectFilter = ({ currentCategory, changeCategory }) => {
   const handleClick = (newCategory) => {
-    console.log(newCategory)
-    setCurrentCategory(newCategory)
+    changeCategory(newCategory)
   }
 
   return (

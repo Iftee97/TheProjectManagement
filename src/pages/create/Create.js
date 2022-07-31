@@ -3,6 +3,7 @@ import Select from 'react-select'
 import { useCollection } from '../../hooks/useCollection'
 import { timestamp } from '../../firebase/config'
 import { useAuthContext } from '../../hooks/useAuthContext'
+import { useFirestore } from '../../hooks/useFirestore'
 
 // styles
 import './Create.css'
@@ -25,6 +26,8 @@ const Create = () => {
   const [category, setCategory] = useState('')
   const [assignedUsers, setAssignedUsers] = useState([])
   const [formError, setFormError] = useState(null)
+
+  const { addDocument } = useFirestore('projects')
 
   useEffect(() => {
     if (documents) {
@@ -74,7 +77,9 @@ const Create = () => {
       assignedUsersList
     }
 
-    // console.log(name, details, dueDate, category.value, assignedUsers)
+    // add the project to firestore database in 'prjects' collection
+    addDocument(project)
+
     console.log(project)
   }
 

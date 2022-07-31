@@ -4,6 +4,7 @@ import { useCollection } from '../../hooks/useCollection'
 import { timestamp } from '../../firebase/config'
 import { useAuthContext } from '../../hooks/useAuthContext'
 import { useFirestore } from '../../hooks/useFirestore'
+import { useHistory } from 'react-router-dom'
 
 // styles
 import './Create.css'
@@ -16,10 +17,12 @@ const categories = [
 ]
 
 const Create = () => {
+  const { addDocument, response } = useFirestore('projects')
   const { documents } = useCollection('users')
   const [users, setUsers] = useState([])
   const { user } = useAuthContext()
 
+  // form field values
   const [name, setName] = useState('')
   const [details, setDetails] = useState('')
   const [dueDate, setDueDate] = useState('')
@@ -27,7 +30,7 @@ const Create = () => {
   const [assignedUsers, setAssignedUsers] = useState([])
   const [formError, setFormError] = useState(null)
 
-  const { addDocument } = useFirestore('projects')
+  const history = useHistory()
 
   useEffect(() => {
     if (documents) {
@@ -41,7 +44,7 @@ const Create = () => {
     }
   }, [documents])
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     setFormError(null)
 
@@ -77,10 +80,13 @@ const Create = () => {
       assignedUsersList
     }
 
-    // add the project to firestore database in 'prjects' collection
-    addDocument(project)
+    // add the project to firestore database in 'projects' collection
+    await addDocument(project)
 
-    console.log(project)
+    // redirect to dashboard
+    if (!response.error) {
+      history.push('/')
+    }
   }
 
   return (

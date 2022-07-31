@@ -68,7 +68,7 @@ export const useFirestore = (collection) => {
   }
 
   // update documents
-  const updateDocuments = async (id, updates) => {
+  const updateDocument = async (id, updates) => {
     dispatch({ type: 'IS_PENDING' })
     try {
       const updatedDocument = await ref.doc(id).update(updates)
@@ -87,7 +87,7 @@ export const useFirestore = (collection) => {
   return {
     addDocument,
     deleteDocument,
-    updateDocuments,
+    updateDocument,
     response
   }
 }

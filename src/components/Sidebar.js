@@ -1,5 +1,5 @@
 import React from 'react'
-import { NavLink } from 'react-router-dom' // this needs work
+import { NavLink } from 'react-router-dom'
 import { useAuthContext } from '../hooks/useAuthContext'
 
 // components

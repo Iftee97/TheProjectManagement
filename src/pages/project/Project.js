@@ -1,5 +1,5 @@
 import React from 'react'
-import { useParams } from 'react-router-dom' // needs work
+import { useParams } from 'react-router-dom'
 import { useDocument } from '../../hooks/useDocument'
 import ProjectSummary from './ProjectSummary'
 import ProjectComments from './ProjectComments'

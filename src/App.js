@@ -1,5 +1,5 @@
 import React from 'react'
-import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom' // this needs work
+import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom'
 import { useAuthContext } from './hooks/useAuthContext'
 
 // styles
@@ -44,7 +44,7 @@ function App() {
             </Switch>
           </div>
           {user && <OnlineUsers />}
-        </BrowserRouter> // all of this needs work
+        </BrowserRouter>
       )}
     </div>
   )

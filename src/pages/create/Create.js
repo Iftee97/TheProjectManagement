@@ -4,7 +4,7 @@ import { useCollection } from '../../hooks/useCollection'
 import { timestamp } from '../../firebase/config'
 import { useAuthContext } from '../../hooks/useAuthContext'
 import { useFirestore } from '../../hooks/useFirestore'
-import { useHistory } from 'react-router-dom' // needs work
+import { useHistory } from 'react-router-dom'
 
 // styles
 import './Create.css'
@@ -30,7 +30,7 @@ const Create = () => {
   const [assignedUsers, setAssignedUsers] = useState([])
   const [formError, setFormError] = useState(null)
 
-  const history = useHistory() // needs work
+  const history = useHistory()
 
   useEffect(() => {
     if (documents) {
@@ -85,7 +85,7 @@ const Create = () => {
 
     // redirect to dashboard
     if (!response.error) {
-      history.push('/') // needs work
+      history.push('/')
     }
   }
 

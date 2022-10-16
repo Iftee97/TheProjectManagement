@@ -2,7 +2,7 @@ import React from 'react'
 import Avatar from '../../components/Avatar'
 import { useFirestore } from '../../hooks/useFirestore'
 import { useAuthContext } from '../../hooks/useAuthContext'
-import { useHistory } from 'react-router-dom' // needs work
+import { useHistory } from 'react-router-dom'
 
 const ProjectSummary = ({ project }) => {
   const { deleteDocument } = useFirestore('projects')

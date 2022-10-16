@@ -40,5 +40,9 @@ export const useLogout = () => {
     return () => setIsCancelled(true)
   }, [])
 
-  return { logout, error, isPending }
+  return {
+    error,
+    isPending,
+    logout
+  }
 }

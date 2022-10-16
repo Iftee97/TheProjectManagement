@@ -55,8 +55,8 @@ export const useSignup = () => {
   }, [])
 
   return {
-    signup,
     isPending,
     error,
+    signup
   }
 }

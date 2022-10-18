@@ -45,7 +45,9 @@ export const useLogin = () => {
   }
 
   useEffect(() => {
-    return () => setIsCancelled(true)
+    return () => {
+      setIsCancelled(true)
+    }
   }, [])
 
   return {

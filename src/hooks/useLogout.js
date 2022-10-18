@@ -17,19 +17,15 @@ export const useLogout = () => {
     setIsPending(true)
 
     try {
-      // update online to false status
-      const { uid } = user // destructuring uid from user
-      // await projectFirestore.collection('users').doc(uid).update({ online: false })
+      const { uid } = user
       const userRef = doc(db, "users", uid)
       await updateDoc(userRef, { online: false })
 
       // sign the user out
       await signOut(auth)
 
-      // dispatch logout action
-      dispatch({ type: 'LOGOUT' })
+      dispatch({ type: 'LOGOUT' }) // dispatch logout action
 
-      // update state
       if (!isCancelled) {
         setIsPending(false)
         setError(null)
@@ -43,7 +39,9 @@ export const useLogout = () => {
   }
 
   useEffect(() => {
-    return () => setIsCancelled(true)
+    return () => {
+      setIsCancelled(true)
+    }
   }, [])
 
   return {

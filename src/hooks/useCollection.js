@@ -34,7 +34,9 @@ export const useCollection = (firestoreCollection, _query, _orderBy) => {
     })
 
     // unsubscribe on unmount
-    return () => unsubscribe()
+    return () => {
+      unsubscribe()
+    }
 
   }, [firestoreCollection, queryRef, orderByRef])
 

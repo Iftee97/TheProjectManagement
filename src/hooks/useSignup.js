@@ -25,25 +25,11 @@ export const useSignup = () => {
         throw new Error('Could not complete signup')
       }
 
-      // // upload user thumbnail
-      // const uploadPath = `thumbnails/${response.user.uid}/${thumbnail.name}`
-      // const img = await projectStorage.ref(uploadPath).put(thumbnail)
-      // const imgUrl = await img.ref.getDownloadURL()
-
-      // // add displayName and photoURL to user
-      // await response.user.updateProfile({ displayName, photoURL: imgUrl })
-
-      // // create a user document in firestore database
-      // await projectFirestore.collection('users').doc(response.user.uid).set({
-      //   online: true,
-      //   displayName,
-      //   photoURL: imgUrl,
-      // })
-
       const storageRef = ref(storage, `thumbnails/${response.user.uid}/${thumbnail.name}`)
       const uploadTask = uploadBytesResumable(storageRef, thumbnail)
       uploadTask.on('state_changed',
         (snapshot) => {
+          setIsPending(true)
           const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
           console.log('Upload is' + progress + '% done')
           switch (snapshot.state) {
@@ -58,6 +44,7 @@ export const useSignup = () => {
             default:
               break
           }
+          setIsPending(false)
         },
         (error) => {
           console.log(error)
@@ -65,13 +52,7 @@ export const useSignup = () => {
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then(
             async (downloadURL) => {
-              // await addDoc(collection(db, "users"), {
-              //   online: true,
-              //   displayName,
-              //   photoURL: imgUrl,
-              //   uid: response.user.uid
-              // }) // adding user info to firestore database in "users" collection
-
+              setIsPending(true)
               await setDoc(doc(db, "users", response.user.uid), {
                 online: true,
                 displayName,
@@ -84,6 +65,7 @@ export const useSignup = () => {
               }) // updating user profile with displayName and photoURL
 
               dispatch({ type: "LOGIN", payload: response.user }) // dispatch LOGIN action
+              setIsPending(false)
             }
           )
         }
@@ -103,7 +85,9 @@ export const useSignup = () => {
   }
 
   useEffect(() => {
-    return () => setIsCancelled(true)
+    return () => {
+      setIsCancelled(true)
+    }
   }, [])
 
   return {

@@ -112,7 +112,9 @@ export const useFirestore = (firestoreCollection) => {
   }
 
   useEffect(() => {
-    return () => setIsCancelled(true)
+    return () => {
+      setIsCancelled(true)
+    }
   }, [])
 
   return {

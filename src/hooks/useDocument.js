@@ -11,14 +11,15 @@ export const useDocument = (firestoreCollection, id) => {
   // real-time data for a document
   useEffect(() => {
     const unsubscribe = onSnapshot(doc(db, firestoreCollection, id), (doc) => {
-      console.log("Current data: ", doc.data())
       setDocument({ ...doc.data(), id: doc.id })
     }, (error) => {
       console.log(error)
       setError('could not fetch data')
     })
 
-    return () => unsubscribe()
+    return () => {
+      unsubscribe()
+    }
   }, [firestoreCollection, id])
 
   return {

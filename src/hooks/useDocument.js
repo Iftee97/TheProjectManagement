@@ -1,25 +1,24 @@
 import { useEffect, useState } from "react"
+
+// firebase imports
 import { db } from "../firebase/config"
-import { doc, getDoc } from "firebase/firestore"
+import { doc, onSnapshot } from "firebase/firestore"
 
 export const useDocument = (firestoreCollection, id) => {
   const [document, setDocument] = useState(null)
   const [error, setError] = useState(null)
 
-  // real-time data for document -- needs work
+  // real-time data for a document
   useEffect(() => {
-    const getDocument = async () => {
-      const docRef = doc(db, firestoreCollection, id);
-      const docSnap = await getDoc(docRef)
+    const unsubscribe = onSnapshot(doc(db, firestoreCollection, id), (doc) => {
+      console.log("Current data: ", doc.data())
+      setDocument({ ...doc.data(), id: doc.id })
+    }, (error) => {
+      console.log(error)
+      setError('could not fetch data')
+    })
 
-      if (docSnap.exists()) {
-        console.log("Document data:", docSnap.data())
-        setDocument({ ...docSnap.data(), id: docSnap.id })
-      } else {
-        setError("No such document!")
-      }
-    }
-    getDocument()
+    return () => unsubscribe()
   }, [firestoreCollection, id])
 
   return {

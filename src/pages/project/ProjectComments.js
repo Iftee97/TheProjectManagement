@@ -5,7 +5,7 @@ import { useFirestore } from '../../hooks/useFirestore'
 import formatDistanceToNow from 'date-fns/formatDistanceToNow'
 
 // firebase imports
-import { Timestamp } from "firebase/firestore";
+import { Timestamp } from "firebase/firestore"
 
 const ProjectComments = ({ project }) => {
   const { updateDocument, response } = useFirestore('projects')
@@ -60,7 +60,7 @@ const ProjectComments = ({ project }) => {
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
             required
-          ></textarea>
+          />
         </label>
         <button className='btn'>Add Comment</button>
       </form>

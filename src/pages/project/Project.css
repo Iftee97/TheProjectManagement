@@ -3,6 +3,7 @@
   grid-template-columns: 3fr 2fr;
   align-items: start;
   grid-gap: 60px;
+  margin-bottom: 2rem;
 }
 
 /* project summary */
@@ -86,6 +87,6 @@
 }
 
 .comment-content {
-  color: var(--text-color);
+  color: var(--title-color);
   font-size: 0.9em;
 }

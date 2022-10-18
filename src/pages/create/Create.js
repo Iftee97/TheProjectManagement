@@ -6,7 +6,7 @@ import { useFirestore } from '../../hooks/useFirestore'
 import { useNavigate } from 'react-router-dom'
 
 // firebase imports
-import { Timestamp } from "firebase/firestore";
+import { Timestamp } from "firebase/firestore"
 
 // styles
 import './Create.css'

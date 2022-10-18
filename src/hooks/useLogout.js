@@ -3,7 +3,7 @@ import { useAuthContext } from './useAuthContext'
 
 // firebase imports
 import { db, auth } from '../firebase/config'
-import { doc, updateDoc } from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore"
 import { signOut } from 'firebase/auth'
 
 export const useLogout = () => {

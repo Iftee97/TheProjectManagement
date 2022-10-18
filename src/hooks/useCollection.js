@@ -1,46 +1,48 @@
 import { useEffect, useState, useRef } from "react"
-import { projectFirestore } from "../firebase/config"
 
-export const useCollection = (collection, _query, _orderBy) => {
+// firebase imports
+import { db } from "../firebase/config"
+import { collection, onSnapshot, query, where, orderBy } from 'firebase/firestore'
+
+export const useCollection = (firestoreCollection, _query, _orderBy) => {
   const [documents, setDocuments] = useState(null)
   const [error, setError] = useState(null)
 
   // if we don't use a ref --> infinite loop in useEffect
-  // _query is an array and is "different" on every function call
-  const query = useRef(_query).current
-  const orderBy = useRef(_orderBy).current
+  // because _query and _orderBy are arrays (reference types) and are different on every function call
+  const queryRef = useRef(_query).current
+  const orderByRef = useRef(_orderBy).current
 
   useEffect(() => {
-    let ref = projectFirestore.collection(collection)
+    let ref = collection(db, firestoreCollection)
 
-    if (query) {
-      ref = ref.where(...query)
-    }
-    if (orderBy) {
-      ref = ref.orderBy(...orderBy)
+    if (queryRef && orderByRef) {
+      ref = query(ref, where(...queryRef), orderBy(...orderByRef))
     }
 
-    const unsubscribe = ref.onSnapshot(snapshot => {
-      let results = []
-      snapshot.docs.forEach(doc => {
-        results.push({ ...doc.data(), id: doc.id })
-      });
-
-      // update state
+    // get real-time documents
+    const unsubscribe = onSnapshot(ref, (snapshot) => {
+      const results = snapshot.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id
+      }))
       setDocuments(results)
       setError(null)
-    }, error => {
+    }, (error) => {
       console.log(error)
-      setError('could not fetch the data')
+      setError('could not fetch data')
     })
 
     // unsubscribe on unmount
     return () => unsubscribe()
 
-  }, [collection, query, orderBy])
+  }, [firestoreCollection, queryRef, orderByRef])
 
   return {
     documents,
     error
   }
 }
+
+// this custom hook is used to access the stored documens in the firestore database
+// and use them in the application frontend

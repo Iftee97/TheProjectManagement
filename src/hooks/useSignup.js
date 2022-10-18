@@ -1,6 +1,12 @@
 import { useState, useEffect } from 'react'
-import { projectAuth, projectStorage, projectFirestore } from '../firebase/config'
 import { useAuthContext } from './useAuthContext'
+
+// firebase imports
+import { db, auth, storage } from "../firebase/config"
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage"
+import { doc, setDoc } from "firebase/firestore"
+// import { collection, addDoc, } from "firebase/firestore"
 
 export const useSignup = () => {
   const [isCancelled, setIsCancelled] = useState(false)
@@ -14,28 +20,74 @@ export const useSignup = () => {
 
     try {
       // signup a user
-      const res = await projectAuth.createUserWithEmailAndPassword(email, password)
-      if (!res) {
+      const response = await createUserWithEmailAndPassword(auth, email, password)
+      if (!response) {
         throw new Error('Could not complete signup')
       }
 
-      // upload user thumbnail
-      const uploadPath = `thumbnails/${res.user.uid}/${thumbnail.name}`
-      const img = await projectStorage.ref(uploadPath).put(thumbnail)
-      const imgUrl = await img.ref.getDownloadURL()
+      // // upload user thumbnail
+      // const uploadPath = `thumbnails/${response.user.uid}/${thumbnail.name}`
+      // const img = await projectStorage.ref(uploadPath).put(thumbnail)
+      // const imgUrl = await img.ref.getDownloadURL()
 
-      // add displayName and photoURL to user
-      await res.user.updateProfile({ displayName, photoURL: imgUrl })
+      // // add displayName and photoURL to user
+      // await response.user.updateProfile({ displayName, photoURL: imgUrl })
 
-      // create a user document in firestore database
-      await projectFirestore.collection('users').doc(res.user.uid).set({
-        online: true,
-        displayName,
-        photoURL: imgUrl,
-      })
+      // // create a user document in firestore database
+      // await projectFirestore.collection('users').doc(response.user.uid).set({
+      //   online: true,
+      //   displayName,
+      //   photoURL: imgUrl,
+      // })
 
-      // dispatch login action
-      dispatch({ type: 'LOGIN', payload: res.user })
+      const storageRef = ref(storage, `thumbnails/${response.user.uid}/${thumbnail.name}`)
+      const uploadTask = uploadBytesResumable(storageRef, thumbnail)
+      uploadTask.on('state_changed',
+        (snapshot) => {
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+          console.log('Upload is' + progress + '% done')
+          switch (snapshot.state) {
+            case 'paused':
+              console.log('Upload is paused')
+              break
+
+            case 'running':
+              console.log('Upload is running')
+              break
+
+            default:
+              break
+          }
+        },
+        (error) => {
+          console.log(error)
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then(
+            async (downloadURL) => {
+              // await addDoc(collection(db, "users"), {
+              //   online: true,
+              //   displayName,
+              //   photoURL: imgUrl,
+              //   uid: response.user.uid
+              // }) // adding user info to firestore database in "users" collection
+
+              await setDoc(doc(db, "users", response.user.uid), {
+                online: true,
+                displayName,
+                photoURL: downloadURL,
+              }) // adding user info to firestore database in "users" collection
+
+              await updateProfile(response.user, {
+                displayName,
+                photoURL: downloadURL
+              }) // updating user profile with displayName and photoURL
+
+              dispatch({ type: "LOGIN", payload: response.user }) // dispatch LOGIN action
+            }
+          )
+        }
+      )
 
       // update state as long as the component has not unmounted
       if (!isCancelled) {

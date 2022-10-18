@@ -1,5 +1,5 @@
 import React from 'react'
-import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { useAuthContext } from './hooks/useAuthContext'
 
 // styles
@@ -25,23 +25,13 @@ function App() {
           {user && <Sidebar />}
           <div className="container">
             <Navbar />
-            <Switch>
-              <Route exact path="/">
-                {user ? <Dashboard /> : <Redirect to="/login" />}
-              </Route>
-              <Route path="/create">
-                {user ? <Create /> : <Redirect to="/login" />}
-              </Route>
-              <Route path="/projects/:id">
-                {user ? <Project /> : <Redirect to="/login" />}
-              </Route>
-              <Route path="/login">
-                {!user ? <Login /> : <Redirect to="/" />}
-              </Route>
-              <Route path="/signup">
-                {!user ? <Signup /> : <Redirect to="/" />}
-              </Route>
-            </Switch>
+            <Routes>
+              <Route path="/" element={user ? <Dashboard /> : <Navigate to="/login" />} />
+              <Route path="/create" element={user ? <Create /> : <Navigate to="/login" />} />
+              <Route path="/projects/:id" element={user ? <Project /> : <Navigate to="/login" />} />
+              <Route path="/login" element={!user ? <Login /> : <Navigate to="/" />} />
+              <Route path="/signup" element={!user ? <Signup /> : <Navigate to="/" />} />
+            </Routes>
           </div>
           {user && <OnlineUsers />}
         </BrowserRouter>

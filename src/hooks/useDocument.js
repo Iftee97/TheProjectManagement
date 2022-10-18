@@ -1,31 +1,26 @@
 import { useEffect, useState } from "react"
-import { projectFirestore } from "../firebase/config"
+import { db } from "../firebase/config"
+import { doc, getDoc } from "firebase/firestore"
 
-export const useDocument = (collection, id) => {
+export const useDocument = (firestoreCollection, id) => {
   const [document, setDocument] = useState(null)
   const [error, setError] = useState(null)
 
-  // realtime data for document
+  // real-time data for document -- needs work
   useEffect(() => {
-    const ref = projectFirestore.collection(collection).doc(id) // document ref
+    const getDocument = async () => {
+      const docRef = doc(db, firestoreCollection, id);
+      const docSnap = await getDoc(docRef)
 
-    const unsubscribe = ref.onSnapshot((snapshot) => {
-      if (snapshot.data()) {
-        setDocument({ ...snapshot.data(), id: snapshot.id })
-        setError(null)
+      if (docSnap.exists()) {
+        console.log("Document data:", docSnap.data())
+        setDocument({ ...docSnap.data(), id: docSnap.id })
       } else {
-        setError('no such document exists')
+        setError("No such document!")
       }
-    }, (err) => {
-      console.log(err.message)
-      setError('failed to get document')
-    })
-
-    // clean up
-    return () => {
-      unsubscribe()
     }
-  }, [collection, id])
+    getDocument()
+  }, [firestoreCollection, id])
 
   return {
     document,
@@ -33,4 +28,4 @@ export const useDocument = (collection, id) => {
   }
 }
 
-// this hook is used to get a document from a firestore collection
+// this hook is used to get a document (in real-time) from a firestore collection

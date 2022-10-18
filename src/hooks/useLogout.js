@@ -1,6 +1,10 @@
 import { useEffect, useState } from 'react'
-import { projectAuth, projectFirestore } from '../firebase/config'
 import { useAuthContext } from './useAuthContext'
+
+// firebase imports
+import { db, auth } from '../firebase/config'
+import { doc, updateDoc } from "firebase/firestore";
+import { signOut } from 'firebase/auth'
 
 export const useLogout = () => {
   const [isCancelled, setIsCancelled] = useState(false)
@@ -15,10 +19,12 @@ export const useLogout = () => {
     try {
       // update online to false status
       const { uid } = user // destructuring uid from user
-      await projectFirestore.collection('users').doc(uid).update({ online: false })
+      // await projectFirestore.collection('users').doc(uid).update({ online: false })
+      const userRef = doc(db, "users", uid)
+      await updateDoc(userRef, { online: false })
 
       // sign the user out
-      await projectAuth.signOut()
+      await signOut(auth)
 
       // dispatch logout action
       dispatch({ type: 'LOGOUT' })

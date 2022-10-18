@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
 import Avatar from '../../components/Avatar'
-import { timestamp } from '../../firebase/config'
 import { useAuthContext } from '../../hooks/useAuthContext'
 import { useFirestore } from '../../hooks/useFirestore'
 import formatDistanceToNow from 'date-fns/formatDistanceToNow'
+
+// firebase imports
+import { Timestamp } from "firebase/firestore";
 
 const ProjectComments = ({ project }) => {
   const { updateDocument, response } = useFirestore('projects')
@@ -17,7 +19,7 @@ const ProjectComments = ({ project }) => {
       displayName: user.displayName,
       photoURL: user.photoURL,
       content: newComment,
-      createdAt: timestamp.fromDate(new Date()),
+      createdAt: Timestamp.fromDate(new Date()),
       id: Math.random()
     }
 

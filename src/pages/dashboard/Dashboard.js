@@ -47,7 +47,10 @@ const Dashboard = () => {
       <h2 className='page-title'>Dashboard</h2>
       {error && <p className='error'>{error}</p>}
       {documents && (
-        <ProjectFilter currentCategory={currentCategory} changeCategory={changeCategory} />
+        <ProjectFilter
+          currentCategory={currentCategory}
+          changeCategory={changeCategory}
+        />
       )}
       {projects && <ProjectList projects={projects} />}
     </div>

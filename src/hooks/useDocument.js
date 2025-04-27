@@ -28,4 +28,5 @@ export const useDocument = (firestoreCollection, id) => {
   }
 }
 
-// this hook is used to get a document (in real-time) from a firestore collection
+// React hook for real-time updates of a single Firestore document.
+// Accepts a collection name and document ID, and returns the document data and error state.

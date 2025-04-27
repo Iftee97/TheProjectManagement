@@ -46,5 +46,6 @@ export const useCollection = (firestoreCollection, _query, _orderBy) => {
   }
 }
 
-// this custom hook is used to access the stored documens in the firestore database
-// and use them in the application frontend
+// Custom React hook for listening to a Firestore collection in real-time.
+// Optionally accepts query and orderBy parameters to filter and sort the results.
+// Returns the live-updating documents array and any error encountered during subscription.
